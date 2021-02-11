@@ -1,0 +1,10 @@
+#logo {
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 5%;
+}
+
+#add_password_btn {
+    text-align: center;
+    padding: 1%;
+}
