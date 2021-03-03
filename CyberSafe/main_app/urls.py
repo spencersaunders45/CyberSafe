@@ -3,12 +3,16 @@ from . import views
 
 urlpatterns = [
     path('login', views.login),
+    path('login/process', views.loginUser),
+    path('logout', views.logout_user),
     path('register', views.createUser),
+    path('register/process', views.addUser),
     path('', views.main),
-    path('update/<int:secretId>', views.updateSecret), #add id to url
-    path('delete/<int:secretId>', views.deleteSecret), #add id to url
+    path('update/<int:secret_id>', views.updateSecret),
+    path('delete/<int:secret_id>', views.deleteSecret),
     path('create', views.createSecret),
-    path('view/<int:secretId>', views.viewSecret), #add id to url
+    path('create/process', views.createSecretData),
+    path('view/<int:secret_id>', views.viewSecret),
     path('update', views.updateUser),
     path('delete', views.deleteUser)
 ]

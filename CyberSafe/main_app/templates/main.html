@@ -19,7 +19,7 @@
         <div class="row">
             <nav class="navbar navbar-expand-lg navbar-light bg-primary">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand" href="/">
                         <img src="../static/img/CyberSafe_Logo.png" alt="CyberSafe Logo" id="logo">
                         CyberSafe
                     </a>
@@ -36,7 +36,10 @@
                                         <a class="nav-link" href="/update">Account</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#">About</a>
+                                        <a class="nav-link" href="/about">About</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/logout">Logout</a>
                                     </li>
                                 </ul>
                         </span>
@@ -50,12 +53,16 @@
             <div class="row mt-5">
                 <div class="col d-flex justify-content-center">
                     <div class="d-flex flex-column">
-                        <div>
+                        <!-- <div>
                             <h3>Amazon</h3>
                         </div>
                         <div>
                             <button class="btn btn-warning">View Info</button>
-                        </div>
+                        </div> -->
+                        {% for name in secrets.all %}
+                            <h3>{{ name.site }}</h3>
+                            <a class="btn btn-warning" href="/view/{{name.id}}">View Info</a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

@@ -19,7 +19,7 @@
         <div class="row">
             <nav class="navbar navbar-expand-lg navbar-light bg-primary">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand" href="/">
                         <img src="../static/img/CyberSafe_Logo.png" alt="CyberSafe Logo" id="logo">
                         CyberSafe
                     </a>
@@ -36,7 +36,10 @@
                                         <a class="nav-link" href="/update">Account</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#">About</a>
+                                        <a class="nav-link" href="/about">About</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/logout">Logout</a>
                                     </li>
                                 </ul>
                         </span>
@@ -45,28 +48,28 @@
         </div>
         <div class="row mt-4" id="main">
             <div class="col-4 mx-auto" id="form">
-                <h1 class="mb-4">Register Account</h1>
+                <h1 class="mb-4">Update Account</h1>
                 <form>
                     {% csrf_token %}
                     <div>
                         <label class="form-label" for="first_name">First Name:</label>
-                        <input class="form-control mb-3" type="text" required placeholder="John">
+                        <input class="form-control mb-3" type="text" required value={{logged_in_user.first_name}}>
                     </div>
                     <div>
                         <label class="form-label" for="last_name">Last Name:</label>
-                        <input class="form-control mb-3" type="text" required placeholder="Doe">
+                        <input class="form-control mb-3" type="text" required value={{logged_in_user.last_name}}>
                     </div>
                     <div>
                         <label class="form-label" for="email">Email:</label>
-                        <input class="form-control mb-3" type="email" required placeholder="john@email.com">
+                        <input class="form-control mb-3" type="email" required value={{logged_in_user.email}}>
                     </div>
                     <div>
                         <label class="form-label" for="password">Password:</label>
-                        <input class="form-control mb-3" type="password" required placeholder="********">
+                        <input class="form-control mb-3" type="password" required placeholder="New Password">
                     </div>
                     <div>
                         <label class="form-label" for="conf_password">Confirm Password:</label>
-                        <input class="form-control mb-4" type="password" required placeholder="********">
+                        <input class="form-control mb-4" type="password" required placeholder="Confirm New Password">
                     </div>
                     <div>
                         <button class="btn btn-success form-control mb-4">Update</button>
