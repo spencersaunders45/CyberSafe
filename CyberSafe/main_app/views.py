@@ -132,8 +132,8 @@ def updateSecret(request, secret_id):
         secret = Secrets.objects.get(id=secret_id)
         context = {
             'site': secret.site,
-            'username': secret_username,
-            'password': secret_password
+            'username': secret.username,
+            'password': secret.password
         }
         return render(request, 'update_secret.html', context)
 
@@ -208,7 +208,8 @@ def viewSecret(request, secret_id):
         context = {
             'siteName': secret.site,
             'password': password,
-            'username': secret.username
+            'username': secret.username,
+            'secret_id': secret.id
         }
         return render(request, 'view_secret.html', context)
 

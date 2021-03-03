@@ -1,8 +1,10 @@
 # Basic encrypter to save data in the DB
-# There are 10 possible encryptions
-# Whatever the last number is in the hashed password will determin the encryption key used
+# Encrypter key is at bottom of page
 
 
+# Takes in the password as data and then turns it into an array using list()
+# It then loops through the array and changes the characters into the associated value
+# After changing the values there is a loop that changes the array back into a string and then returns the string
 class Encrypt:
   def hide(data):
     info = list(data)
@@ -196,6 +198,11 @@ class Encrypt:
       encryptedString += info[i]
     return encryptedString
 
+
+# The encrypted password is passed in from the DB as data
+# The string is then turned into a array using list
+# It loops through the list and changes the characters
+# The last loop changes the array back into a string and returns it
   def discover(data):
     info = list(data)
     for i in range(len(info)):
