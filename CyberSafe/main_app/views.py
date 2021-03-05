@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Users, LoginManager, Secrets
 from django.contrib import messages
 import bcrypt
-from .crypter import Encrypt
+from .crypter import Wizard
 
 # Create your views here.
 
@@ -26,6 +26,7 @@ def loginUser(request):
         our_user = user_list[0]
         if bcrypt.checkpw(request.POST['password'].encode(), our_user.password.encode()):
             request.session['user_id'] = our_user.id
+            request.session['mPassword'] = request.POST['password']
             return redirect('/')
         # if the email or password are inccorect then they are shown on the login page
         else:
@@ -61,6 +62,7 @@ def addUser(request):
         password = hashed_pw
     )
     request.session['user_id'] = new_user.id
+    request.session['mPassword'] = request.POST['password']
     return redirect('/')
 
 # loads the page to display and edit user info
@@ -109,7 +111,7 @@ def deleteUser(request):
         return redirect('/login')
 
 
-# -----> Secret Related Data <-----
+# --------------------------> Secret Related Data <--------------------------------
 
 # loads the main page
 def main(request):
@@ -130,10 +132,11 @@ def updateSecret(request, secret_id):
     else:
         logged_in_user = Users.objects.get(id=request.session['user_id'])
         secret = Secrets.objects.get(id=secret_id)
+        password = Wizard.reappear(request.session['mPassword'], secret.password)
         context = {
             'site': secret.site,
             'username': secret.username,
-            'password': secret.password
+            'password': password
         }
         return render(request, 'update_secret.html', context)
 
@@ -186,7 +189,7 @@ def createSecretData(request):
     else:
         logged_in_user = Users.objects.get(id=request.session['user_id'])
         # encrypts the password before saving it in the DB
-        password = Encrypt.hide(request.POST['password'])
+        password = Wizard.disappear(request.session['mPassword'], request.POST['password'])
         # adds the secret into the DB
         form = request.POST
         new_user = Secrets.objects.create(
@@ -204,7 +207,7 @@ def viewSecret(request, secret_id):
     else:
         logged_in_user = Users.objects.get(id=request.session['user_id'])
         secret = Secrets.objects.get(id=secret_id)
-        password = Encrypt.discover(secret.password)
+        password = Wizard.reappear(request.session['mPassword'], secret.password)
         context = {
             'siteName': secret.site,
             'password': password,
