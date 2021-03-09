@@ -98,7 +98,8 @@ def updateUserInfo(request):
         logged_in_user.email = form['email']
         logged_in_user.password = hashed_pw
         logged_in_user.save()
-        return redirect('/update')
+        request.session['mPassword'] = request.POST['password']
+        return redirect('/')
 
 # deletes the user and logs them out
 def deleteUser(request):
@@ -136,7 +137,8 @@ def updateSecret(request, secret_id):
         context = {
             'site': secret.site,
             'username': secret.username,
-            'password': password
+            'password': password,
+            'secretId': secret.id
         }
         return render(request, 'update_secret.html', context)
 
@@ -146,19 +148,14 @@ def updateSecretData(request, secret_id):
         return redirect('/login')
     else:
         logged_in_user = Users.objects.get(id=request.session['user_id'])
-        # encrypts username before saving it to the DB
-        username = request.POST['username']
-        hashed_un = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        secret_info = Secrets.objects.get(id=secret_id)
         # encrypts password before saving it to the DB
-        password = request.POST['password']
-        hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        password = Wizard.disappear(request.session['mPassword'],request.POST['password'])
         # saves the data to the DB
-        form = request.POST
-        this_secret = Users.objects.get(id=secret_id)
-        this_secret.site = form['site']
-        this_secret.username = hashed_un
-        this_secret.password = hashed_pw
-        this_secret.save()
+        secret_info.site = request.POST['site']
+        secret_info.username = request.POST['username']
+        secret_info.password = password
+        secret_info.save()
         return redirect('/')
 
 # deletes secret from DB

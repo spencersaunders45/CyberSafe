@@ -49,27 +49,27 @@
         <div class="row mt-4" id="main">
             <div class="col-4 mx-auto" id="form">
                 <h1 class="mb-4">Update Account</h1>
-                <form>
+                <form action="/update/process" method="POST">
                     {% csrf_token %}
                     <div>
                         <label class="form-label" for="first_name">First Name:</label>
-                        <input class="form-control mb-3" type="text" required value={{logged_in_user.first_name}}>
+                        <input name="fname" class="form-control mb-3" type="text" required value={{logged_in_user.first_name}}>
                     </div>
                     <div>
                         <label class="form-label" for="last_name">Last Name:</label>
-                        <input class="form-control mb-3" type="text" required value={{logged_in_user.last_name}}>
+                        <input name="lname" class="form-control mb-3" type="text" required value={{logged_in_user.last_name}}>
                     </div>
                     <div>
                         <label class="form-label" for="email">Email:</label>
-                        <input class="form-control mb-3" type="email" required value={{logged_in_user.email}}>
+                        <input name="email" class="form-control mb-3" type="email" required value={{logged_in_user.email}}>
                     </div>
                     <div>
                         <label class="form-label" for="password">Password:</label>
-                        <input class="form-control mb-3" type="password" required placeholder="New Password">
+                        <input name="password" class="form-control mb-3" type="password" required placeholder="Password">
                     </div>
                     <div>
                         <label class="form-label" for="conf_password">Confirm Password:</label>
-                        <input class="form-control mb-4" type="password" required placeholder="Confirm New Password">
+                        <input name="confirm_pw" class="form-control mb-4" type="password" required placeholder="Confirm Password">
                     </div>
                     <div>
                         <button class="btn btn-success form-control mb-4">Update</button>
