@@ -98,3 +98,57 @@ class Wizard:
         continue
       count += 1
     return viewPassword
+
+class PasswordChecker:
+
+  def symbolCheck(password):
+    symbols = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','+','=','{','[',']','}','|',';',':','"','<',',','.','>','?','/']
+    symbIdx = 0
+    passIdx = 0
+    count = 0
+    for i in range(len(password)):
+      if password[i] in symbols:
+        count += 1
+    if count > 5:
+      return "You can only use 5 symbols"
+    if count < 5:
+      return "You need to have 5 symbols"
+
+  def numberCheck(password):
+    numbers = ['1','2','3','4','5','6','7','8','9','0']
+    numIdx = 0
+    passIdx = 0
+    count = 0
+    for i in range(len(password)):
+      if password[i] in numbers:
+        count += 1
+    if count > 5:
+      return "You can only use 5 numbers"
+    if count < 5:
+      return "You need to have 5 numbers"
+
+  def lowerLettersCheck(password):
+    lowerLetters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    letterIdx = 0
+    passIdx = 0
+    count = 0
+    for i in range(len(password)):
+      if password[i] in lowerLetters:
+        count += 1
+    if count > 5:
+      return "You can only use 5 lower case letters"
+    if count < 5:
+      return "You need to have 5 lower case letters"
+
+  def capLettersCheck(password):
+    capLetters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+    letterIdx = 0
+    passIdx = 0
+    count = 0
+    for i in range(len(password)):
+      if password[i] in capLetters:
+        count += 1
+    if count > 5:
+      return "You can only use 5 upper case letters"
+    if count < 5:
+      return "You need to have 5 upper case letters"

@@ -1,4 +1,5 @@
 from django.db import models
+from .crypter import PasswordChecker
 
 # Create your models here.
 class LoginManager(models.Manager):
@@ -8,10 +9,18 @@ class LoginManager(models.Manager):
       errors['fname'] = "First name needs 3 or more characters"
     if len(postData['lname']) < 3:
       errors['lname'] = "Last name needs 3 or more characters"
-    if len(postData['password']) < 7:
-      errors['password'] = 'Password must be at least 7 characters'
-    if len(postData['password']) != len(postData['confirm_pw']):
+    if len(postData['password']) != 20:
+      errors['password'] = 'Password must be 20 characters'
+    if (postData['password'] != postData['confirm_pw']):
       errors['password'] = 'Passwords do not match'
+    if PasswordChecker.numberCheck(postData['password']):
+      errors['password'] = PasswordChecker.numberCheck(postData['password'])
+    if PasswordChecker.capLettersCheck(postData['password']):
+      errors['password'] = PasswordChecker.capLettersCheck(postData['password'])
+    if PasswordChecker.lowerLettersCheck(postData['password']):
+      errors['password'] = PasswordChecker.lowerLettersCheck(postData['password'])
+    if PasswordChecker.symbolCheck(postData['password']):
+      errors['password'] = PasswordChecker.symbolCheck(postData['password'])
     return errors
   def login_validator(self, post_data):
     errors = {}
