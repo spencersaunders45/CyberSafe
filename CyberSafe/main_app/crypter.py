@@ -99,6 +99,10 @@ class Wizard:
       count += 1
     return viewPassword
 
+
+
+
+
 class PasswordChecker:
 
   def symbolCheck(password):
@@ -152,3 +156,23 @@ class PasswordChecker:
       return "You can only use 5 upper case letters"
     if count < 5:
       return "You need to have 5 upper case letters"
+
+
+
+class Password:
+  def create(maxLength):
+    password = ""
+
+    chars = [
+      ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','+','=','{','[',']','}','|',';',':','"','<',',','.','>','?','/'],
+      ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
+      ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
+      ['1','2','3','4','5','6','7','8','9','0']
+    ]
+
+    for i in range(maxLength):
+      charIdx = randint(0, 3)
+      idx = randint(0, len(chars[charIdx])-1)
+      password += chars[charIdx][idx]
+
+    return password

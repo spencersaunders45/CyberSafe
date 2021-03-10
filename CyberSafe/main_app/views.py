@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Users, LoginManager, Secrets
 from django.contrib import messages
 import bcrypt
-from .crypter import Wizard
+from .crypter import Wizard, Password
 
 # Create your views here.
 
@@ -186,14 +186,15 @@ def createSecretData(request):
     else:
         logged_in_user = Users.objects.get(id=request.session['user_id'])
         # encrypts the password before saving it in the DB
-        password = Wizard.disappear(request.session['mPassword'], request.POST['password'])
+        password = Password.create(int(request.POST['maxLength']))
+        encryptPassword = Wizard.disappear(request.session['mPassword'], password)
         # adds the secret into the DB
         form = request.POST
         new_user = Secrets.objects.create(
             user = logged_in_user,
             site = form['site'],
             username = request.POST['username'],
-            password = password
+            password = encryptPassword
         )
         return redirect('/')
 
