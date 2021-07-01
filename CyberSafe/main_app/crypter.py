@@ -1,12 +1,10 @@
 from random import *
 
 # charList is the list of characters, numbers, and symbols used to create the encryptor key
-# 
-
 charList = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9','0','`','~','!','@','#','$','%','^','&','*','(',')','-','_','+','=','{','[',']','}','|',';',':','"','<',',','.','>','?','/']
 
 
-# Takes in the masterPassword and then calls the createBreaklessArr to make a dictionary that will be used to encrypt and decrypt the passwords
+# Creates a key for encrypting and decrypting
 def createEncryptorKey(masterPassword):
   # the four idx's are started at different positions to help the generation of nonmatching keys
   encryptorKey = {}
@@ -21,11 +19,11 @@ def createEncryptorKey(masterPassword):
     count = 0
     while(unique == False):
       unique = True
-      # helps prevent the repeat of the same characters for one key
+      # helps prevent repeat keys
       if idx1 == idx2:
         idx1 += 3
       if idx2 == idx3:
-        idx2 +=2
+        idx2 += 2
       if idx3 == idx4:
         idx3 += 2
       # moves the idx back into the range of the list
@@ -37,8 +35,7 @@ def createEncryptorKey(masterPassword):
         idx3 = 7
       if idx4 >= len(masterPassword):
         idx4 = 11
-      # adds all characters to create a key and checks to see if the key already is used
-      # if a key is already in use then unique is changed back to false and count increases by one to help create a unique key
+      # Checks to see if that key has already been created
       key = masterPassword[idx1] + masterPassword[idx2] + masterPassword[idx3] + masterPassword[idx4]
       if key in encryptorKey:
         unique = False
@@ -63,6 +60,7 @@ def createEncryptorKey(masterPassword):
   return encryptorKey
 
 
+# Encrypts and decrypts passwords
 class Wizard:
   # encrypts the password to be saved in the DB
   def disappear(masterPassword, password):
@@ -70,9 +68,6 @@ class Wizard:
     dbPassword = ""
     keyList = list(encryptorKey.keys())
     valList = list(encryptorKey.values())
-    # takes each character and finds the values key in the dictionary and then
-    # appends that key into the dbPassword string
-    # a random break is added after each key to help 
     for i in range(len(password)):
       idx = valList.index(password[i])
       dbPassword += keyList[idx]
@@ -86,8 +81,6 @@ class Wizard:
     valList = list(encryptorKey.values())
     tempVal = ""
     count = 0
-    # loops through the array and adds each character into tempVal
-    # the tempVal is then used to find the key and adds that keys value to viewPassword
     for i in range(len(dbPassword)):
       tempVal += dbPassword[i]
       if count == 3:
@@ -102,9 +95,8 @@ class Wizard:
 
 
 
-
+# Validates the password
 class PasswordChecker:
-
   def symbolCheck(password):
     symbols = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','+','=','{','[',']','}','|',';',':','"','<',',','.','>','?','/']
     symbIdx = 0
@@ -158,7 +150,7 @@ class PasswordChecker:
       return "You need to have 5 upper case letters"
 
 
-
+# Creates a strong password
 class Password:
   def create(maxLength):
     password = ""

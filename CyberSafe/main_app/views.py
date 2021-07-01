@@ -14,26 +14,26 @@ def login(request):
 
 # Logs in the user
 def loginUser(request):
-    # checks to see if the login info came back with errors from the models manager
+    # checks for errors
     errors = Users.objects.login_validator(request.POST)
     if len(errors):
         for key, value in errors.items():
             messages.error(request, value)
             return redirect('/login')
     user_list = Users.objects.filter(email = request.POST['email'])
-    # if the email and password is correct then they are saved with a cookie
+    # saves user to session
     if user_list:
         our_user = user_list[0]
         if bcrypt.checkpw(request.POST['password'].encode(), our_user.password.encode()):
             request.session['user_id'] = our_user.id
             request.session['mPassword'] = request.POST['password']
             return redirect('/')
-        # if the email or password are inccorect then they are shown on the login page
+        # notifies user of errors
         else:
             messages.error(request, 'Invalid info')
         return redirect('/login')
 
-# clears the users cookies and logs them out
+# clears session
 def logout_user(request):
     request.session.flush()
     return redirect('/login')
@@ -42,18 +42,18 @@ def logout_user(request):
 def createUser(request):
     return render(request, 'register.html')
 
-# Processes data submitted by the user and adds them to the DB
+# Creates new user
 def addUser(request):
-    # Checks to see if user data passes validations
+    # Checks for errors
     errors = Users.objects.check_user(request.POST)
     if len(errors):
         for key, value in errors.items():
             messages.error(request, value)
             return redirect('/register')
-    # encrypts the password before saving it in the DB
+    # hashes the password
     password = request.POST['password']
     hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-    # adds the user into the DB
+    # adds the user to DB
     form = request.POST
     new_user = Users.objects.create(
         first_name = form['fname'],
@@ -61,11 +61,12 @@ def addUser(request):
         email = form['email'],
         password = hashed_pw
     )
+    # saves user to session
     request.session['user_id'] = new_user.id
     request.session['mPassword'] = request.POST['password']
     return redirect('/')
 
-# loads the page to display and edit user info
+# sends update_user.html
 def updateUser(request):
     if 'user_id' not in request.session:
         return redirect('/login')
@@ -82,16 +83,16 @@ def updateUserInfo(request):
         return redirect('/login')
     else:
         logged_in_user = Users.objects.get(id=request.session['user_id'])
-        # Checks to see if user data passes validations
+        # Checks for errors
         errors = Users.objects.check_user(request.POST)
         if len(errors):
             for key, value in errors.items():
-                messages.error(request, vlaue)
+                messages.error(request, value)
                 return redirect('/updateUser')
-        # encrypts the password before saving it in the DB
+        # hashes password
         password = request.POST['password']
         hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-        # updates user info in the DB
+        # updates user info
         form = request.POST
         logged_in_user.first_name = form['fname']
         logged_in_user.last_name = form['lname']
@@ -114,7 +115,7 @@ def deleteUser(request):
 
 # --------------------------> Secret Related Data <--------------------------------
 
-# loads the main page
+# sends main.html
 def main(request):
     if 'user_id' not in request.session:
         return redirect('/login')
@@ -126,7 +127,7 @@ def main(request):
         }
         return render(request, 'main.html', context)
 
-# loads the page to update a secret
+# sends update_secret.html
 def updateSecret(request, secret_id):
     if 'user_id' not in request.session:
         return redirect('/login')
@@ -149,9 +150,9 @@ def updateSecretData(request, secret_id):
     else:
         logged_in_user = Users.objects.get(id=request.session['user_id'])
         secret_info = Secrets.objects.get(id=secret_id)
-        # encrypts password before saving it to the DB
+        # encrypts password
         password = Wizard.disappear(request.session['mPassword'],request.POST['password'])
-        # saves the data to the DB
+        # saves changes
         secret_info.site = request.POST['site']
         secret_info.username = request.POST['username']
         secret_info.password = password
@@ -168,7 +169,7 @@ def deleteSecret(request, secret_id):
         this_secret.delete()
         return redirect('/')
 
-# loads the page to create a secret
+# sends create_secret.html
 def createSecret(request):
     if 'user_id' not in request.session:
         return redirect('/login')
@@ -179,16 +180,16 @@ def createSecret(request):
         }
         return render(request, 'create_secret.html', context)
 
-# Takes the POST data and creates a secret
+# Creates a secret
 def createSecretData(request):
     if 'user_id' not in request.session:
         return redirect('/login')
     else:
         logged_in_user = Users.objects.get(id=request.session['user_id'])
-        # encrypts the password before saving it in the DB
+        # hashes password
         password = Password.create(int(request.POST['maxLength']))
         encryptPassword = Wizard.disappear(request.session['mPassword'], password)
-        # adds the secret into the DB
+        # Adds secret to DB
         form = request.POST
         new_user = Secrets.objects.create(
             user = logged_in_user,
@@ -198,7 +199,7 @@ def createSecretData(request):
         )
         return redirect('/')
 
-# loads the page to view secret info
+# Sends view_secret.html
 def viewSecret(request, secret_id):
     if 'user_id' not in request.session:
         return redirect('/login')
@@ -213,15 +214,3 @@ def viewSecret(request, secret_id):
             'secret_id': secret.id
         }
         return render(request, 'view_secret.html', context)
-
-# -------------------------------------> LOGIN <------------------------------------------
-
-# -------------------------------------> REGISTRATION <------------------------------------------
-
-# -------------------------------------> MAIN <------------------------------------------
-
-# -------------------------------------> UPDATED USER <------------------------------------------
-
-# -------------------------------------> SECRET CRUD COMMANDS <------------------------------------------
-
-# -------------------------------------> USER CRUD COMMANDS <------------------------------------------
